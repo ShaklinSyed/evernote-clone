@@ -1,3 +1,34 @@
-<!-- <quill-editor theme="snow" format="object" [(ngModel)]="objectFormat"></quill-editor> -->
+<mat-toolbar>
+  <span>Evernote Clone</span>
+</mat-toolbar>
 
-<div #editor></div>
+<div style="margin-top: 50px;">
+  <ng-template *ngIf="data.length > 0; else emptyScreen">
+    <div class="sidebar">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <div class="editor">
+      <div #editor></div>
+    </div>
+    
+    <div>
+    
+    </div>
+  </ng-template>
+  
+  <ng-template #emptyScreen>
+    <div class="empty-screen-wrapper">
+      <div class="empty-screen-cont">
+        <div class="icon">
+          <mat-icon>edit</mat-icon>
+        </div>
+        
+        <div class="label">
+          Press to Create <br />
+          a New Document
+        </div>
+      </div>
+    </div>
+  </ng-template>  
+</div>

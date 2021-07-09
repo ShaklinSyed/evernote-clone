@@ -2,10 +2,10 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
 import Quill from 'quill';
 import QuillCursors from "quill-cursors";
-import { WebsocketProvider } from 'y-websocket'
+// import { WebsocketProvider } from 'y-websocket';
 
-import * as Y from 'yjs'
-import { QuillBinding } from 'y-quill'
+// import * as Y from 'yjs';
+// import { QuillBinding } from 'y-quill';
 
 var document: any;
 
@@ -17,34 +17,40 @@ var document: any;
 
 export class AppComponent implements AfterViewInit {
 
+  data: any = [];
   quill: any;
   ydoc: any;
   ytext: any;
   binding: any;
 
-  @ViewChild("editor",{static: false}) editor: any;
+  @ViewChild("editor",{ static: false }) editor: any;
+
+  constructor() {
+    this.getData();
+  }
+  
   
   ngAfterViewInit() {
 
-    Quill.register('modules/cursors', QuillCursors);
-    this.quill = new Quill(this.editor.nativeElement, {
-      modules: {
-        cursors: true,
-        toolbar: [
-          // adding some basic Quill content features
-          [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
-          ['image', 'code-block']
-        ],
-        history: {
-          // Local undo shouldn't undo changes
-          // from remote users
-          userOnly: true
-        }
-      },
-      placeholder: 'Start collaborating...',
-      theme: 'snow' // 'bubble' is also great
-    })
+    // Quill.register('modules/cursors', QuillCursors);
+    // this.quill = new Quill(this.editor.nativeElement, {
+    //   modules: {
+    //     cursors: true,
+    //     toolbar: [
+    //       // adding some basic Quill content features
+    //       [{ header: [1, 2, false] }],
+    //       ['bold', 'italic', 'underline'],
+    //       ['image', 'code-block']
+    //     ],
+    //     history: {
+    //       // Local undo shouldn't undo changes
+    //       // from remote users
+    //       userOnly: true
+    //     }
+    //   },
+    //   placeholder: 'Start collaborating...',
+    //   theme: 'snow' // 'bubble' is also great
+    // })
   
     // // A Yjs document holds the shared data
     // this.ydoc = new Y.Doc();
@@ -72,6 +78,18 @@ export class AppComponent implements AfterViewInit {
     //   }
     // });
     
+  }
+
+  getData(): void {
+
+    let localData: any = localStorage.getItem("documents");
+
+    if (localData === null) {
+      this.data = [];
+    } else {
+      this.data = JSON.parse(localData).slice();    
+    }
+
   }
   
 }

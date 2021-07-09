@@ -2,30 +2,27 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-
-// import { QuillModule } from 'ngx-quill'
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    // QuillModule.forRoot({
-    //   modules: {
-    //     cursors: true,
-    //     history: {
-    //       // Local undo shouldn't undo changes
-    //       // from remote users
-    //       userOnly: true
-    //     }
-    //   }
-    // })
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
