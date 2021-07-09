@@ -27,11 +27,13 @@ export class AppComponent implements OnInit{
   ytext: any;
   binding: any;
   newDoc: boolean = false;
+  showSaveButton: boolean = false;
   
   quillDelta: any;
   change: any;
 
   @ViewChild("editor", { static: true }) editor: any;
+  @ViewChild("tempEditor", { static: true}) tempEditor: any;
 
   constructor() {}
 
@@ -39,7 +41,6 @@ export class AppComponent implements OnInit{
 
     let localData: any = localStorage.getItem("document");
 
-    
     if (localData !== null) { 
       this.data = JSON.parse(localData);
       this.createNewDocument(this.data.content);
@@ -76,6 +77,8 @@ export class AppComponent implements OnInit{
       this.newDoc = true;
     }
 
+    this.showSaveButton = true;
+
     this.quillDelta = Quill.import('delta');
     this.change = new this.quillDelta();
 
@@ -110,11 +113,70 @@ export class AppComponent implements OnInit{
 
     let version = {
       data: contents,
-      time: new Date()
+      vnum: this.data.versions.length + 1
     }
+
     this.data.versions.push(version); 
     localStorage.setItem('document', JSON.stringify(this.data));
     this.change = new this.quillDelta();
+  }
+
+  showDiffVersion(version: any): void {
+
+    this.showSaveButton = false;
+    let current = this.quill.getContents();
+
+    let tempQuill = new Quill(this.tempEditor.nativeElement)
+
+    tempQuill.setContents(version.data);
+    let tempQullContents = tempQuill.getContents();
+    let diff: any = current.diff(tempQullContents);
+
+    for (let i = 0; i < diff.ops.length; i++) {
+      var op = diff.ops[i];
+
+      // if the change was an insertion
+      if (op.hasOwnProperty('insert')) {
+        // color it green
+        op.attributes = {
+          background: "#cce8cc",
+          color: "#003700"
+        };
+      }
+
+      // if the change was a deletion 
+      if (op.hasOwnProperty('delete')) {
+        // keep the text
+        op.retain = op.delete;
+        delete op.delete;
+
+        op.attributes = {
+          background: "#e8cccc",
+          color: "#370000",
+          strike: true
+        };
+      }
+    }
+    
+    var adjusted = current.compose(diff);
+
+    this.quill.setContents(adjusted);
+
+    this.tempEditor.nativeElement.remove();
+    this.quill.enable(false);
+
+  }
+
+  applyOldVersion(version: any): void{
+    this.quill.enable(true);
+    this.quill.setContents(version.data);
+    this.saveVersion();
+  }
+
+  resetToCurrentVersion(): void {
+    this.quill.enable(true);
+    this.quill.setContents(this.data.content);
+    this.showSaveButton = true;
   }
   
 }

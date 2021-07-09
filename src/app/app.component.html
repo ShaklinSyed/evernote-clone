@@ -4,13 +4,27 @@
 
 <div style="margin-top: 70px;">
 
-  <button (click)="saveVersion()">Save</button>
+  
 
-  <div class="editor">
-    <div #editor></div>
+  <div class="editor-wrapper">
+
+    <div class="update-container">
+      <button (click)="saveVersion()" [disabled]="!showSaveButton">Save</button>
+
+      <div class="versions" *ngIf="this.data.versions.length > 0">
+        <app-versions [versions]="this.data.versions" 
+          (showDiffVersion)="showDiffVersion($event)"
+          (applyOldVersion)="applyOldVersion($event)"
+          (resetToCurrentVersion)="resetToCurrentVersion()" ></app-versions>
+      </div>
+    </div>
+
+    <div class="editor">
+      <div #editor></div>
+    </div>
+
   </div>
   
-  * click the save button to store the current version of the document
   <div *ngIf="data.content == '' && !newDoc">
     <div class="empty-screen-wrapper" (click)="createNewDocument()">
       <div class="empty-screen-cont">
@@ -26,3 +40,5 @@
     </div>
   </div>  
 </div>
+
+<div #tempEditor style="visibility: none;"></div>

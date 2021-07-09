@@ -1,0 +1,14 @@
+<p class="title">Compare Previous Versions and Apply</p>
+
+<div class="wrapper">
+    
+    <div *ngFor="let version of versions" class="version">   
+        <input type="checkbox" [name]="version.vnum" 
+            [checked]="isCheckedName == version.vnum"
+            (change)="onChangeDiffSelection($event)" 
+            [disabled]="isChecked && (isCheckedName!= version.vnum)"
+        >
+        <span>{{ "version " + version.vnum }} </span> 
+        <button *ngIf="isChecked && isCheckedName == version.vnum" (click)="applyVersion(version)">apply</button>
+    </div>
+</div>
