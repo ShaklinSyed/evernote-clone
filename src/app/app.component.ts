@@ -17,12 +17,19 @@ var document: any;
 
 export class AppComponent implements OnInit{
 
-  data: string = "";
+  data: any = {
+    content: '',
+    versions: []
+  };
+
   quill: any;
   ydoc: any;
   ytext: any;
   binding: any;
   newDoc: boolean = false;
+  
+  quillDelta: any;
+  change: any;
 
   @ViewChild("editor", { static: true }) editor: any;
 
@@ -32,11 +39,11 @@ export class AppComponent implements OnInit{
 
     let localData: any = localStorage.getItem("document");
 
-    if (localData !== null) {
+    
+    if (localData !== null) { 
       this.data = JSON.parse(localData);
-      this.createNewDocument(this.data);
+      this.createNewDocument(this.data.content);
     }
-
   }
 
   ngOnInit(): void {
@@ -45,7 +52,6 @@ export class AppComponent implements OnInit{
 
   createNewDocument(savedData: any = ""): void {
 
-    
     Quill.register('modules/cursors', QuillCursors);
     this.quill = new Quill(this.editor.nativeElement, {
       modules: {
@@ -57,8 +63,6 @@ export class AppComponent implements OnInit{
           ['image', 'code-block']
         ],
         history: {
-          // Local undo shouldn't undo changes
-          // from remote users
           userOnly: true
         }
       },
@@ -71,8 +75,15 @@ export class AppComponent implements OnInit{
     } else {
       this.newDoc = true;
     }
-    
-  
+
+    this.quillDelta = Quill.import('delta');
+    this.change = new this.quillDelta();
+
+    let that = this;
+    this.quill.on('text-change', function(delta: any) {
+      that.change = that.change.compose(delta);
+    });
+
     // // A Yjs document holds the shared data
     // this.ydoc = new Y.Doc();
   
@@ -87,17 +98,23 @@ export class AppComponent implements OnInit{
     //   'wss://demos.yjs.dev', 'quill-demo-room', this.ydoc
     // )
 
-    // this.quill.on('text-change', function(delta: any, oldDelta: any, source: any) {
+  }
 
-    //   console.log(delta);
-    //   console.log(oldDelta);
-    //   console.log(source);
-    //   if (source == 'api') {
-    //     console.log("An API call triggered this change.");
-    //   } else if (source == 'user') {
-    //     console.log("A user action triggered this change.");
-    //   }
-    // });
+  saveVersion() {
+    if (this.change.length() === 0) {
+      return;
+    }
+
+    let contents = this.quill.getContents();
+    this.data.content = contents;
+
+    let version = {
+      data: contents,
+      time: new Date()
+    }
+    this.data.versions.push(version); 
+    localStorage.setItem('document', JSON.stringify(this.data));
+    this.change = new this.quillDelta();
   }
   
 }

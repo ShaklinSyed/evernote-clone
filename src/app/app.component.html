@@ -4,11 +4,14 @@
 
 <div style="margin-top: 70px;">
 
+  <button (click)="saveVersion()">Save</button>
+
   <div class="editor">
     <div #editor></div>
   </div>
   
-  <div *ngIf="data == '' && !newDoc">
+  * click the save button to store the current version of the document
+  <div *ngIf="data.content == '' && !newDoc">
     <div class="empty-screen-wrapper" (click)="createNewDocument()">
       <div class="empty-screen-cont">
         <div class="icon">
