@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import Quill from 'quill';
 import QuillCursors from "quill-cursors";
@@ -15,42 +15,63 @@ var document: any;
   styleUrls: ['./app.component.sass']
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit{
 
-  data: any = [];
+  data: string = "";
   quill: any;
   ydoc: any;
   ytext: any;
   binding: any;
+  newDoc: boolean = false;
 
-  @ViewChild("editor",{ static: false }) editor: any;
+  @ViewChild("editor", { static: true }) editor: any;
 
-  constructor() {
-    this.getData();
+  constructor() {}
+
+  getData(): void {
+
+    let localData: any = localStorage.getItem("document");
+
+    if (localData !== null) {
+      this.data = JSON.parse(localData);
+      this.createNewDocument(this.data);
+    }
+
   }
-  
-  
-  ngAfterViewInit() {
 
-    // Quill.register('modules/cursors', QuillCursors);
-    // this.quill = new Quill(this.editor.nativeElement, {
-    //   modules: {
-    //     cursors: true,
-    //     toolbar: [
-    //       // adding some basic Quill content features
-    //       [{ header: [1, 2, false] }],
-    //       ['bold', 'italic', 'underline'],
-    //       ['image', 'code-block']
-    //     ],
-    //     history: {
-    //       // Local undo shouldn't undo changes
-    //       // from remote users
-    //       userOnly: true
-    //     }
-    //   },
-    //   placeholder: 'Start collaborating...',
-    //   theme: 'snow' // 'bubble' is also great
-    // })
+  ngOnInit(): void {
+    this.getData();  
+  }
+
+  createNewDocument(savedData: any = ""): void {
+
+    
+    Quill.register('modules/cursors', QuillCursors);
+    this.quill = new Quill(this.editor.nativeElement, {
+      modules: {
+        cursors: true,
+        toolbar: [
+          // adding some basic Quill content features
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          ['image', 'code-block']
+        ],
+        history: {
+          // Local undo shouldn't undo changes
+          // from remote users
+          userOnly: true
+        }
+      },
+      placeholder: 'Start collaborating...',
+      theme: 'snow' // 'bubble' is also great
+    })
+
+    if (savedData != "") {
+      this.quill.setContents(savedData);
+    } else {
+      this.newDoc = true;
+    }
+    
   
     // // A Yjs document holds the shared data
     // this.ydoc = new Y.Doc();
@@ -77,19 +98,6 @@ export class AppComponent implements AfterViewInit {
     //     console.log("A user action triggered this change.");
     //   }
     // });
-    
-  }
-
-  getData(): void {
-
-    let localData: any = localStorage.getItem("documents");
-
-    if (localData === null) {
-      this.data = [];
-    } else {
-      this.data = JSON.parse(localData).slice();    
-    }
-
   }
   
 }
