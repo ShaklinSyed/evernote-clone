@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import Quill from 'quill';
 import QuillCursors from "quill-cursors";
-// import { WebsocketProvider } from 'y-websocket';
+import { WebsocketProvider } from 'y-websocket';
 
-// import * as Y from 'yjs';
-// import { QuillBinding } from 'y-quill';
+import * as Y from 'yjs';
+import { QuillBinding } from 'y-quill';
 
 var document: any;
 
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit{
   ytext: any;
   binding: any;
   newDoc: boolean = false;
+
   showSaveButton: boolean = false;
   
   quillDelta: any;
@@ -87,19 +88,19 @@ export class AppComponent implements OnInit{
       that.change = that.change.compose(delta);
     });
 
-    // // A Yjs document holds the shared data
-    // this.ydoc = new Y.Doc();
+    // A Yjs document holds the shared data
+    this.ydoc = new Y.Doc();
   
-    // // Define a shared text type on the document
-    // this.ytext = this.ydoc.getText('quill');
+    // Define a shared text type on the document
+    this.ytext = this.ydoc.getText('quill');
   
-    // // Create an editor-binding which
-    // // "binds" the quill editor to a Y.Text type. 
-    // this.binding = new QuillBinding(this.ytext, this.quill);
+    // Create an editor-binding which
+    // "binds" the quill editor to a Y.Text type. 
+    this.binding = new QuillBinding(this.ytext, this.quill);
 
-    // const provider = new WebsocketProvider(
-    //   'wss://demos.yjs.dev', 'quill-demo-room', this.ydoc
-    // )
+    const provider = new WebsocketProvider(
+      'wss://demos.yjs.dev', 'quill-demo-room', this.ydoc
+    )
 
   }
 
