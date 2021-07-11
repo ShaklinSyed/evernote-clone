@@ -6,7 +6,7 @@
   <div class="editor-wrapper">
 
     <div class="update-container" >
-      <button (click)="saveVersion()" [disabled]="!showSaveButton" *ngIf="data.content == '' && isNewDoc">Save</button>
+      <button (click)="saveVersion()" [disabled]="!enableSaveButton" *ngIf="isNewDoc">Save</button>
 
       <div class="versions" *ngIf="this.data.versions.length > 0">
         <app-versions 

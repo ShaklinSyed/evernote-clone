@@ -28,7 +28,7 @@ export class AppComponent implements OnInit{
   binding: any;
   isNewDoc: boolean = false;
 
-  showSaveButton: boolean = false;
+  enableSaveButton: boolean = false;
   
   quillDelta: any;
   change: any;
@@ -74,11 +74,11 @@ export class AppComponent implements OnInit{
 
     if (savedData != "") {
       this.quill.setContents(savedData);
-    } else {
-      this.isNewDoc = true;
-    }
+    } 
 
-    this.showSaveButton = true;
+    this.isNewDoc = true;
+
+    this.enableSaveButton = true;
 
     this.quillDelta = Quill.import('delta');
     this.change = new this.quillDelta();
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit{
 
   showDiffVersion(version: any): void {
 
-    this.showSaveButton = false;
+    this.enableSaveButton = false;
     let current = this.quill.getContents();
 
     let tempQuill = new Quill(this.tempEditor.nativeElement)
@@ -174,7 +174,7 @@ export class AppComponent implements OnInit{
   resetToCurrentVersion(): void {
     this.quill.enable(true);
     this.quill.setContents(this.data.content);
-    this.showSaveButton = true;
+    this.enableSaveButton = true;
   }
   
 }
