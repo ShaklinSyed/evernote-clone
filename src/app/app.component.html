@@ -5,8 +5,8 @@
 <div style="margin-top: 70px;">
   <div class="editor-wrapper">
 
-    <div class="update-container">
-      <button (click)="saveVersion()" [disabled]="!showSaveButton">Save</button>
+    <div class="update-container" >
+      <button (click)="saveVersion()" [disabled]="!showSaveButton" *ngIf="data.content == '' && isNewDoc">Save</button>
 
       <div class="versions" *ngIf="this.data.versions.length > 0">
         <app-versions 
@@ -24,7 +24,7 @@
 
   </div>
   
-  <div *ngIf="data.content == '' && !newDoc">
+  <div *ngIf="data.content == '' && !isNewDoc">
     <div class="empty-screen-wrapper" (click)="createNewDocument()">
       <div class="empty-screen-cont">
         <div class="icon">

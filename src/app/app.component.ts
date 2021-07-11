@@ -26,7 +26,7 @@ export class AppComponent implements OnInit{
   ydoc: any;
   ytext: any;
   binding: any;
-  newDoc: boolean = false;
+  isNewDoc: boolean = false;
 
   showSaveButton: boolean = false;
   
@@ -75,7 +75,7 @@ export class AppComponent implements OnInit{
     if (savedData != "") {
       this.quill.setContents(savedData);
     } else {
-      this.newDoc = true;
+      this.isNewDoc = true;
     }
 
     this.showSaveButton = true;
@@ -93,15 +93,12 @@ export class AppComponent implements OnInit{
   
     // Define a shared text type on the document
     this.ytext = this.ydoc.getText('quill');
-  
-    // Create an editor-binding which
-    // "binds" the quill editor to a Y.Text type. 
-    this.binding = new QuillBinding(this.ytext, this.quill);
 
     const provider = new WebsocketProvider(
       'wss://demos.yjs.dev', 'quill-demo-room', this.ydoc
     )
 
+    this.binding = new QuillBinding(this.ytext, this.quill, provider.awareness);
   }
 
   saveVersion() {
